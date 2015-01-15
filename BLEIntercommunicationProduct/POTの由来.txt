@@ -1,0 +1,2 @@
+POT = provide an opportunity for talk
+話すための機会の提供
