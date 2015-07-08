@@ -15,6 +15,7 @@
 @implementation FirstViewController
 
 - (void)viewDidLoad {
+    
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
@@ -76,11 +77,6 @@
         
         [scrollView addSubview:rpView[i]];
     }
-    
-    inBeaconView = [[UIView alloc]initWithFrame:CGRectMake(40, 5, 12, 12)];
-    inBeaconView.backgroundColor = [UIColor blueColor];
-    inBeaconView.alpha = 0.1;
-    [scrollView addSubview:inBeaconView];
 }
 
 - (void)viewDidAppear:(BOOL)animated{
@@ -91,15 +87,6 @@
 - (void)moveInputViewCon{
     
     [self presentViewController:inputViewCon animated:YES completion:nil];
-}
-
-- (void)intoBeacon:(BOOL)inBeacon{
-    
-    if (inBeacon) {
-        inBeaconView.alpha = 1;
-    }else{
-        inBeaconView.alpha = 0.1;
-    }
 }
 
 - (void)touchedReceiveProfileView:(NSInteger)tag{

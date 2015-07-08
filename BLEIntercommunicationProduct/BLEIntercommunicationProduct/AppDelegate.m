@@ -92,18 +92,12 @@
     switch (state) {
         case CLRegionStateInside://既に領域内にいた場合
             NSLog(@"CLRegionStateInside");
-            
-            [cbController startCentralManager];
-            [viewController intoBeacon:YES];
-            
             break;
         case CLRegionStateOutside:
             NSLog(@"CLRegionStateOutside");
-            [viewController intoBeacon:NO];
             break;
         case CLRegionStateUnknown:
             NSLog(@"CLRegionStateUnknown");
-            [viewController intoBeacon:NO];
             break;
         default:
             break;
@@ -113,9 +107,15 @@
 //領域に入った
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
-    [cbController startCentralManager];
+    if (cbController == nil) {
+        cbController = [[CBController alloc] init];
+        cbController.delegate = self;
+        
+        //[self nofityMessage:[NSArray arrayWithObjects:@"cbController",@"起動！", nil]];
+    }
     
-    [viewController intoBeacon:YES];
+    [cbController startCentralManager];
+    //[self nofityMessage:[NSArray arrayWithObjects:@"セントラル",@"起動！", nil]];
     
     // Beaconの距離測定を開始する（しなくてもよい）
     if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
@@ -126,9 +126,9 @@
 //領域から出た
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
-    [cbController stopAdvertisingAndScan];
+    [cbController stopAdvertising];
     
-    [viewController intoBeacon:NO];
+    //[self nofityMessage:[NSArray arrayWithObjects:@"ペリフェラル",@"終了！", nil]];
     
     // Beaconの距離測定を終了する（しなくてもよい）
     if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
@@ -163,17 +163,6 @@
  
  }
  */
-
-- (BOOL)canBecomeFirstResponder{
-    
-    return YES;
-}
-
-//振った時
-- (void)motionBegan:(UIEventSubtype)motion withEvent:(UIEvent *)event{
-    
-    //[cbController startCentralManager];
-}
 
 - (void)nofityMessage:(NSArray*)profileArray{
     

@@ -49,29 +49,25 @@
     }
 }
 
-- (void)preInitPM{
-    
-    if (!discoverPeripheral) {
-        [self startPeripheralManager];
-        [self.centralManager stopScan];
-    }
-}
-
 - (void)startPeripheralManager{
+    
+    [self.centralManager stopScan];
+    //[self.delegate nofityMessage:[NSArray arrayWithObjects:@"セントラル",@"終了！", nil]];
     
     discoverPeripheral = NO;
     
     if (_peripheralManager == nil) {
         //PeripheralManagerを初期化生成
         _peripheralManager = [[CBPeripheralManager alloc] initWithDelegate:self queue:nil options:nil];
+        
     }else{
         [self peripheralManagerDidUpdateState:_peripheralManager];
     }
+    //[self.delegate nofityMessage:[NSArray arrayWithObjects:@"ペリフェラル",@"起動！", nil]];
 }
 
-- (void)stopAdvertisingAndScan{
+- (void)stopAdvertising{
     
-    [self.centralManager stopScan];
     [self.peripheralManager stopAdvertising];
 }
 
@@ -83,7 +79,9 @@
     //アドバタイズしているペリフェラルを検出する
     [self.centralManager scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:TRANSFER_SERVICE_UUID]] options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@NO}];
     
-    [self performSelector:@selector(preInitPM) withObject:nil afterDelay:2];
+    if (!discoverPeripheral) {
+        [self performSelector:@selector(startPeripheralManager) withObject:nil afterDelay:2];
+    }
 }
 
 //ペリフェラルが見つかったらそれぞれ呼ばれる
@@ -93,7 +91,7 @@
     
     //NSLog(@"Discovered %@", peripheral.name);
     
-    discoveredPeriperal[discoverNum] = peripheral;
+    discoveredPeripheral[discoverNum] = peripheral;
     
     //接続を要求
     [self.centralManager connectPeripheral:peripheral options:nil];
@@ -224,7 +222,6 @@
         if (index == discoverNum) {
             
             [self startPeripheralManager];
-            [self.centralManager stopScan];
             [peripheralArray removeAllObjects];
         }
     }
@@ -236,6 +233,7 @@
     
     //書き込みエラー
     if (error) {
+        
     }
 }
 
@@ -244,6 +242,10 @@
 //生成された後と、ステートが変わった時に呼び出し
 - (void)peripheralManagerDidUpdateState:(CBPeripheralManager *)peripheral{
     
+    CBPeripheralManagerAuthorizationStatus status = [CBPeripheralManager authorizationStatus];
+    if (status != CBPeripheralManagerAuthorizationStatusAuthorized) {
+        NSLog(@"バックグラウンド無許可");
+    }
     
     //サービスUUIDに関連付ける可変のサービスを生成
     CBMutableService *transferService = [[CBMutableService alloc] initWithType:serviceUUID primary:YES];

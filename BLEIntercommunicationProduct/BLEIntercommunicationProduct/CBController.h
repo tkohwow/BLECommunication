@@ -22,7 +22,7 @@
     CBUUID              *serviceUUID;
     CBUUID              *characteristicUUID[3];
     
-    CBPeripheral        *discoveredPeriperal[10];
+    CBPeripheral        *discoveredPeripheral[10];
     
     NSMutableArray      *mUnionArray[10];
     NSMutableArray      *peripheralArray;
@@ -42,6 +42,6 @@
 @property (strong, nonatomic) CBMutableCharacteristic   *characteristic3;
 
 -(void)startCentralManager;
-- (void)stopAdvertisingAndScan;
+- (void)stopAdvertising;
 
 @end

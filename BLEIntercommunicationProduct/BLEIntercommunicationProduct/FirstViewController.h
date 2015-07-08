@@ -29,11 +29,8 @@
     
     InputViewController     *inputViewCon;
     UINavigationController  *profileNaviCon;
-    
-    UIView              *inBeaconView;
 }
 
 - (void)addProfileLabel;
-- (void)intoBeacon:(BOOL)inBeacon;
 
 @end
