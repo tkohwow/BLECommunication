@@ -1,0 +1,3 @@
+# BLECommunication
+
+CoreBluetoothを使ったiOSアプリケーションです。
